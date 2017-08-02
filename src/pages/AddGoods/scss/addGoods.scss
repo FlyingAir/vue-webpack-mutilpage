@@ -186,6 +186,10 @@
       height: 32px;
       width: 100%;
     }
+    span{
+      font-size:13px;
+      color: #263238;
+    }
   }
   .info-title {
     background: #F7F9FB;
@@ -235,6 +239,8 @@
       width: 80px;
       height: 26px;
       cursor: pointer;
+      box-shadow:none;
+      outline: none;
     }
   }
 }
@@ -453,4 +459,14 @@
   color: #FFFFFF;
   border: none;
   height: 42px;
+}
+select[name=select_category] {
+    width:90%;
+    border:1px solid #ddd;
+    height: 190px;
+    padding:8px;
+    font-size:14px;
+    option{
+      text-align:left;
+    }
 }

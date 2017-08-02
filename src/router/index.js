@@ -5,21 +5,19 @@ Vue.use(Router)
 
 export default new Router({
   routes: [{
-    path: '/index/goodslist',
+    path: '/goodslist',
     name: 'goodslist',
     component: require('../pages/GoodsList/index/app.vue'),
-  },
-  {
-    path: '/index/goodsEdit',
+  }, {
+    path: '/goodslist/goodsEdit',
     name: 'goodsEdit',
     component: require('../pages/GoodsEditReview/index/app.vue'),
-  },{
-    path: '/index/goodsReview',
+  }, {
+    path: '/goodslist/goodsReview',
     name: 'goodsReview',
     component: require('../pages/GoodsEditReview/index/app.vue'),
-  },{
+  }, {
     path: '*',
-    redirect: '/index/goodslist'
-  }
-  ]
+    redirect: '/goodslist'
+  }]
 })

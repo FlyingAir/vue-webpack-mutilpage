@@ -124,7 +124,7 @@ var pages = getEntry('./src/pages/**/*.html');
 for (var pathname in pages) {
   // 配置生成的html文件，定义路径等
   var conf = {
-    filename: '../Application/Home/View/' + pathname + '.html',
+    filename: '../Application/Tpl/Guds/' + pathname + '.html',
     template: pages[pathname], // 模板路径
     chunks: [pathname, 'vendor', 'manifest'], // 每个html引用的js模块
     inject: true              // js插入位置

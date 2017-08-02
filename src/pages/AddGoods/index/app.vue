@@ -2,54 +2,58 @@
   <div class="erp-mian-content">
     <div class="erp-addgoods">
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="基础信息" name="first">
+        <el-tab-pane label="基础信息" name="first"> 
           <header>品牌信息</header>
           <table border="0" cellspacing="0" cellpadding="0" class="erp-brand-info">
             <tbody>
               <tr class="tr-1">
                 <td class="info-title">品牌名</td>
                 <td>
-                  <el-select v-model="brandNameValue" placeholder="请选择">
-                    <el-option v-for="item in brandName" :key="item.value" :label="item.label" :value="item.value">
+                  <el-select v-model="brandNameValue" placeholder="请选择" @change="getBrandInfo" filterable>
+                    <el-option v-for="(value,key,index) in brandName" :key="key" :label="key" :value="key">
                     </el-option>
                   </el-select>
                 </td>
                 <td class="info-title">品牌类目</td>
                 <td>
-                  <el-select v-model="brandCategoryValue" placeholder="请选择">
-                    <el-option v-for="item in brandCategory" :key="item.value" :label="item.label" :value="item.value">
+                  <el-select v-model="brandCategoryValue" placeholder="请选择" @change="chooseBrandCat">
+                    <el-option class="brandCats" v-for="item in brandCategory" :key="item.catId" :label="item.allVal" :value="item.allVal" :data-id="item.catId">
                     </el-option>
                   </el-select>
                 </td>
                 <td class="info-title">类目code</td>
                 <td>
-                  <p></p>
+                  <span class="categoryCode">{{categoryCode}}</span>
                 </td>
                 <td class="info-title">类目名字</td>
                 <td>
-                  <p></p>
+                  <span>{{brandCategoryValue}}</span>
                 </td>
               </tr>
               <tr class="tr-2">
                 <td class="info-title category">一级类目</td>
                 <td>
-                  <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="categoryLevel01" resize="none">
-                  </el-input>
+                  <select id="select_category_lv1" name="select_category" aria-invalid="false" size="10">
+                    <option v-for="item in catLv1" :value="item.val.catId" @click="catLv1Click($event)">{{item.val.allVal}}</option>
+                  </select>
                 </td>
                 <td class="info-title category">二级类目</td>
                 <td>
-                  <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="categoryLevel02" resize="none">
-                  </el-input>
+                  <select id="select_category_lv2" name="select_category" aria-invalid="false" size="10">
+                    <option :value="item.val.catId" v-for="item in catLv2" @click="catLv2Click($event)">{{item.val.allVal}}</option>
+                  </select>
                 </td>
                 <td class="info-title category">三级类目</td>
                 <td>
-                  <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="categoryLevel03" resize="none">
-                  </el-input>
+                  <select id="select_category_lv3" name="select_category" aria-invalid="false" size="10">
+                    <option :value="item.val.catId" v-for="item in catLv3" @click="catLv3Click($event)">{{item.val.allVal}}</option>
+                  </select>
                 </td>
                 <td class="info-title category">四级类目</td>
                 <td>
-                  <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="categoryLevel04" resize="none">
-                  </el-input>
+                  <select id="select_category_lv4" name="select_category" aria-invalid="false" size="10">
+                    <option value="" v-for="item in catLv4"></option>
+                  </select>
                 </td>
               </tr>
             </tbody>
@@ -84,7 +88,7 @@
                 <td class="info-title">商品单位</td>
                 <td>
                   <el-select v-model="goodsUnitValue" placeholder="请选择">
-                    <el-option v-for="item in goodsUnit" :key="item.value" :label="item.label" :value="item.value">
+                    <el-option v-for="item in goodsUnit" :key="item" :label="item" :value="item">
                     </el-option>
                   </el-select>
                 </td>
@@ -142,7 +146,7 @@
                 <td>
                   <div class='img-content'></div>
                   <span>中文主图</span>
-                  <button>选择文件</button>
+                  <button type="button">选择文件</button>
                 </td>
                 <td>
                   <div class='img-content'></div>
@@ -409,6 +413,7 @@
   </div>
 </template>
 <script>
+import api from '../../../api/index.js'
 export default {
   data() {
     return {
@@ -417,29 +422,23 @@ export default {
 
       activeName: 'first',
       // 品牌名
-      brandName: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }],
-      brandNameValue: '小米',
+      brandName: {},
+      brandNameValue: '',
       // 品牌类目
-      brandCategory: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }],
-      brandCategoryValue: '母婴',
+      brandCategory: {},
+      brandCategoryValue: '',
+      //类目code
+      categoryCode: "",
+      //存data
+      categoryLevel: '',
+      // code数组
+      codeArr: [],
+
+      // 一、二、三、四级类目
+      catLv1: [],
+      catLv2: [],
+      catLv3: [],
+      catLv4: [],
       // 商品单位
       goodsUnit: [{
         value: '选项1',
@@ -451,7 +450,7 @@ export default {
         value: '选项3',
         label: '蚵仔煎'
       }],
-      goodsUnitValue: '个',
+      goodsUnitValue: '',
       //币种
       currency: [{
         value: '选项1',
@@ -563,8 +562,8 @@ export default {
       showSearchBox: false,
     }
   },
-  components: {
-
+  created() {
+    this.getBrand();
   },
   methods: {
     handleClick(tab, event) {
@@ -573,6 +572,119 @@ export default {
     languageChange(event) {
 
     },
+    // 获取品牌名
+    getBrand() {
+      const that = this;
+      $.ajax({
+          url: api.getBrand(),
+          type: 'GET',
+          dataType: 'json',
+        })
+        .success(function(data) {
+          that.brandName = data.data.brandList;
+          that.goodsUnit = data.data.unit;
+          // console.log(data);
+        })
+        .error(function() {
+          console.log("error");
+        })
+        .always(function() {
+          console.log("complete");
+        });
+    },
+    // 根据品牌名获取信息
+    getBrandInfo() {
+      const that = this;
+      $.ajax({
+          url: api.getBrandInfo(that.brandNameValue),
+          type: 'GET',
+          dataType: 'json',
+        })
+        .success(function(data) {
+          that.brandCategory = data.data.list;
+          that.categoryLevel = data.data.cateStru;
+          that.brandCategoryValue = that.brandCategory[Object.keys(that.brandCategory)[0]].allVal;
+          console.log(that.brandCategory)
+          console.log(that.categoryLevel)
+        })
+        .error(function() {
+          console.log("error");
+        })
+        .always(function() {
+          console.log("complete");
+        });
+    },
+    // 选择品牌类目
+    chooseBrandCat() {
+      const that = this;
+      setTimeout(function() {
+        that.categoryCode = $(".el-select-dropdown__item.brandCats.selected").data('id')
+        let arr = that.getCatCode(that.categoryCode);
+        console.log(arr);
+        that.catLv1 = '';
+        that.catLv2 = '';
+        that.catLv3 = '';
+        if (arr[0]) {
+          that.catLv1 = that.categoryLevel;
+          setTimeout(function() { $('#select_category_lv1').val(arr[0]) }, 50)
+          if (arr[1]) {
+            that.catLv2 = that.catLv1[arr[0]].sec;
+            setTimeout(function() { $('#select_category_lv2').val(arr[1]) }, 50)
+            if (arr[2]) {
+              that.catLv3 = that.catLv2[arr[1]].thr;
+              setTimeout(function() { $('#select_category_lv3').val(arr[2]) }, 50)
+            }
+          }
+        }
+      }, 50)
+    },
+    //lv1点击
+    catLv1Click($event){
+      let id=event.currentTarget.getAttribute("value");
+      let name =event.currentTarget.innerText;
+      this.catLv2=this.categoryLevel[id].sec;  
+      this.categoryCode=id;
+      // this.brandCategoryValue=name;
+    },
+    //lv2点击
+     catLv2Click(){
+      let id=event.currentTarget.getAttribute("value");
+      this.catLv3=this.catLv2[id].thr; 
+
+    },
+    //lv3点击
+     catLv3Click(){
+      
+    },
+
+    //获取 多级品牌类目Id
+    getCatCode(id) {
+      let key1 = '';
+      let key2 = '';
+      let key3 = '';
+      let level1 = '';
+      let level2 = '';
+      let level3 = '';
+      let mod1 = '';
+      let mod2 = '';
+      let num = 0;
+      num = Number(id.substring(1));
+      level1 = parseInt(num / 10000000);
+      console.log(level1)
+      mod1 = num % 10000000;
+      key1 = "C0" + level1 * 10000000;
+      if (level1 && mod1 != 0) {
+        level2 = parseInt(mod1 / 10000);
+        mod2 = mod1 % 10000;
+        key2 = "C0" + (level1 * 10000000 + level2 * 10000);
+        if (level2 && mod2 != 0) {
+          level3 = mod2 / 10;
+          key3 = "C0" + (level1 * 10000000 + level2 * 10000 + level3 * 10);
+        }
+      }
+      return [key1, key2, key3];
+    },
+
     /**
      * 语言选择，input toggle
      */
