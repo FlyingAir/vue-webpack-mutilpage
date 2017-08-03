@@ -2,7 +2,7 @@
   <div class="erp-mian-content">
     <div class="erp-addgoods">
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="基础信息" name="first"> 
+        <el-tab-pane label="基础信息" name="first">
           <header>品牌信息</header>
           <table border="0" cellspacing="0" cellpadding="0" class="erp-brand-info">
             <tbody>
@@ -10,7 +10,7 @@
                 <td class="info-title">品牌名</td>
                 <td>
                   <el-select v-model="brandNameValue" placeholder="请选择" @change="getBrandInfo" filterable>
-                    <el-option v-for="(value,key,index) in brandName" :key="key" :label="key" :value="key">
+                    <el-option class="brandlist" v-for="(value,key,index) in brandName" :key="value.brandId" :data-id="value.brandId" :label="key" :value="key">
                     </el-option>
                   </el-select>
                 </td>
@@ -27,7 +27,7 @@
                 </td>
                 <td class="info-title">类目名字</td>
                 <td>
-                  <span>{{brandCategoryValue}}</span>
+                  <span>{{brandCat}}</span>
                 </td>
               </tr>
               <tr class="tr-2">
@@ -83,7 +83,7 @@
                 </td>
                 <td class="info-title">品牌ID</td>
                 <td>
-                  <p></p>
+                  <p>{{brandId}}</p>
                 </td>
                 <td class="info-title">商品单位</td>
                 <td>
@@ -144,24 +144,32 @@
             <tbody>
               <tr>
                 <td>
-                  <div class='img-content'></div>
+                  <div class='img-content'><img :src="cnPic" alt=""></div>
                   <span>中文主图</span>
-                  <button type="button">选择文件</button>
+                  <form action="" class="updatePicForm">
+                    <a href="javascript:;" class="file">选择文件<input type="file" @change="updatePic($event)" class='cnPic' data-content="cnContent"></a>
+                  </form>
                 </td>
                 <td>
-                  <div class='img-content'></div>
+                  <div class='img-content'><img :src="enPic" alt=""></div>
                   <span>英文主图</span>
-                  <button>选择文件</button>
+                  <form action="" class="updatePicForm">
+                    <a href="javascript:;" class="file">选择文件<input type="file" @change="updatePic($event)" class='enPic' data-content="enContent"></a>
+                  </form>
                 </td>
                 <td>
-                  <div class='img-content'></div>
+                  <div class='img-content'><img :src="krPic" alt=""></div>
                   <span>韩文主图</span>
-                  <button>选择文件</button>
+                  <form action="" class="updatePicForm">
+                    <a href="javascript:;" class="file">选择文件<input type="file" @change="updatePic($event)" class='krPic' data-content="krContent"></a>
+                  </form>
                 </td>
                 <td>
-                  <div class='img-content'></div>
+                  <div class='img-content'><img :src="jaPic" alt=""></div>
                   <span>日文主图</span>
-                  <button>选择文件</button>
+                  <form action="" class="updatePicForm">
+                    <a href="javascript:;" class="file">选择文件<input type="file" @change="updatePic($event)" class='jaPic' data-content="jaContent"></a>
+                  </form>
                 </td>
               </tr>
             </tbody>
@@ -171,12 +179,12 @@
           <div class="sku-item">
             <span>币种</span>
             <el-select v-model="currencyValue" placeholder="请选择" id='currency_choice'>
-              <el-option v-for="item in currency" :key="item.value" :label="item.label" :value="item.value">
+              <el-option v-for="item in currency" :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL">
               </el-option>
             </el-select>
             <span>产地</span>
             <el-select v-model="originPlaceValue" placeholder="请选择">
-              <el-option v-for="item in originPlace" :key="item.value" :label="item.label" :value="item.value">
+              <el-option v-for="item in originPlace" :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL">
               </el-option>
             </el-select>
           </div>
@@ -195,16 +203,16 @@
                 <td class="option_name">
                   <el-row :gutter="10">
                     <el-col :span="6">
-                      <el-input v-model="KoreanOptionName" placeholder="Korean" disabled></el-input>
+                      <el-input v-model="KoreanOptionName" placeholder="Korean"></el-input>
                     </el-col>
                     <el-col :span="6">
-                      <el-input v-model="ChineseOptionName" placeholder="Chinese" disabled></el-input>
+                      <el-input v-model="ChineseOptionName" placeholder="Chinese"></el-input>
                     </el-col>
                     <el-col :span="6">
-                      <el-input v-model="EnglishOptionName" placeholder="English" disabled></el-input>
+                      <el-input v-model="EnglishOptionName" placeholder="English"></el-input>
                     </el-col>
                     <el-col :span="6">
-                      <el-input v-model="JapaneseOptionName" placeholder="Japanese" disabled></el-input>
+                      <el-input v-model="JapaneseOptionName" placeholder="Japanese"></el-input>
                     </el-col>
                   </el-row>
                 </td>
@@ -223,7 +231,7 @@
                       <el-input v-model="JapaneseOptionValue" placeholder="Japanese"></el-input>
                     </el-col>
                     <i class="el-icon-search" @click="openSearchBox"></i>
-                    <el-button type="button" class='add-sku-btn' icon="plus">添加</el-button>
+                    <el-button type="button" class='add-sku-btn' icon="plus" @click='addOptions'>添加</el-button>
                   </el-row>
                 </td>
               </tr>
@@ -258,7 +266,7 @@
                     <el-col :span="5">
                       <el-input v-model="item.JapaneseOptionValue" placeholder="Japanese"></el-input>
                     </el-col>
-                    <i class="el-icon-search" @click="openSearchBox"></i>
+                    <i class="el-icon-search" @click="openSearchBox($event)" :data-index="index"></i>
                     <i class="el-icon-delete2" @click="delSkuOption(index)"></i>
                   </el-row>
                 </td>
@@ -419,13 +427,19 @@ export default {
     return {
       // 遮罩层
       maskBox: false,
-
       activeName: 'first',
+
+      // 保存中英日韩商品信息
+      cnContent: {},
+      enContent: {},
+      krContent: {},
+      jaContent: {},
       // 品牌名
       brandName: {},
       brandNameValue: '',
       // 品牌类目
       brandCategory: {},
+      brandCat: '',
       brandCategoryValue: '',
       //类目code
       categoryCode: "",
@@ -433,12 +447,13 @@ export default {
       categoryLevel: '',
       // code数组
       codeArr: [],
-
       // 一、二、三、四级类目
       catLv1: [],
       catLv2: [],
       catLv3: [],
       catLv4: [],
+      // 商品ID
+      brandId: '',
       // 商品单位
       goodsUnit: [{
         value: '选项1',
@@ -451,30 +466,18 @@ export default {
         label: '蚵仔煎'
       }],
       goodsUnitValue: '',
+
+      // 多国主图
+      cnPic: '',
+      enPic: '',
+      krPic: '',
+      jaPic: '',
       //币种
-      currency: [{
-        value: '选项1',
-        label: '中国'
-      }, {
-        value: '选项2',
-        label: '日本'
-      }, {
-        value: '选项3',
-        label: '韩国'
-      }],
-      currencyValue: '人民币',
+      currency: "",
+      currencyValue: '',
       //产地
-      originPlace: [{
-        value: '选项1',
-        label: '中国'
-      }, {
-        value: '选项2',
-        label: '日本'
-      }, {
-        value: '选项3',
-        label: '韩国'
-      }],
-      originPlaceValue: '中国',
+      originPlace: "",
+      originPlaceValue: '',
       // 商品保质期限
       goodsShelfLife: '365',
       // 类目
@@ -563,14 +566,15 @@ export default {
     }
   },
   created() {
+    // 进入页面获取品牌名
     this.getBrand();
+    // 获取币种、产地
+    this.getBasicOptions();
   },
   methods: {
+    // 切换tab栏
     handleClick(tab, event) {
       console.log(tab, event);
-    },
-    languageChange(event) {
-
     },
     // 获取品牌名
     getBrand() {
@@ -583,12 +587,12 @@ export default {
         .success(function(data) {
           that.brandName = data.data.brandList;
           that.goodsUnit = data.data.unit;
-          // console.log(data);
+          console.log(data);
         })
         .error(function() {
-          console.log("error");
+          that.$message({ showClose: true, message: "error", type: 'error' })
         })
-        .always(function() {
+        .complete(function() {
           console.log("complete");
         });
     },
@@ -601,16 +605,21 @@ export default {
           dataType: 'json',
         })
         .success(function(data) {
-          that.brandCategory = data.data.list;
-          that.categoryLevel = data.data.cateStru;
-          that.brandCategoryValue = that.brandCategory[Object.keys(that.brandCategory)[0]].allVal;
-          console.log(that.brandCategory)
-          console.log(that.categoryLevel)
+          if (data.data.list) {
+            that.brandCategory = data.data.list;
+            that.categoryLevel = data.data.cateStru;
+            that.brandCategoryValue = that.brandCategory[Object.keys(that.brandCategory)[0]].allVal;
+            that.brandCat = that.brandCategoryValue;
+            console.log(data)
+            let brandid = ($('.brandlist.selected').data('id')) ? $('.brandlist.selected').data('id') : "";
+            console.log(brandid)
+            that.brandId = brandid
+          }
         })
         .error(function() {
-          console.log("error");
+          that.$message({ showClose: true, message: "error", type: 'error' })
         })
-        .always(function() {
+        .complete(function() {
           console.log("complete");
         });
     },
@@ -619,11 +628,12 @@ export default {
       const that = this;
       setTimeout(function() {
         that.categoryCode = $(".el-select-dropdown__item.brandCats.selected").data('id')
+        that.brandCat = that.brandCategoryValue;
         let arr = that.getCatCode(that.categoryCode);
-        console.log(arr);
         that.catLv1 = '';
         that.catLv2 = '';
         that.catLv3 = '';
+        // 判断有几级，分别渲染
         if (arr[0]) {
           that.catLv1 = that.categoryLevel;
           setTimeout(function() { $('#select_category_lv1').val(arr[0]) }, 50)
@@ -639,38 +649,35 @@ export default {
       }, 50)
     },
     //lv1点击
-    catLv1Click($event){
-      let id=event.currentTarget.getAttribute("value");
-      let name =event.currentTarget.innerText;
-      this.catLv2=this.categoryLevel[id].sec;  
-      this.categoryCode=id;
-      // this.brandCategoryValue=name;
+    catLv1Click() {
+      this.catLv3 = ''
+      let id = event.currentTarget.getAttribute("value");
+      let name = event.currentTarget.innerText;
+      this.catLv2 = this.categoryLevel[id].sec;
+      this.categoryCode = id;
+      this.brandCat = name;
     },
     //lv2点击
-     catLv2Click(){
-      let id=event.currentTarget.getAttribute("value");
-      this.catLv3=this.catLv2[id].thr; 
-
+    catLv2Click() {
+      let id = event.currentTarget.getAttribute("value");
+      let name = event.currentTarget.innerText;
+      this.catLv3 = this.catLv2[id].thr;
+      this.categoryCode = id;
+      this.brandCat = name;
     },
     //lv3点击
-     catLv3Click(){
-      
+    catLv3Click() {
+      let id = event.currentTarget.getAttribute("value");
+      let name = event.currentTarget.innerText;
+      this.categoryCode = id;
+      this.brandCat = name;
     },
 
     //获取 多级品牌类目Id
     getCatCode(id) {
-      let key1 = '';
-      let key2 = '';
-      let key3 = '';
-      let level1 = '';
-      let level2 = '';
-      let level3 = '';
-      let mod1 = '';
-      let mod2 = '';
-      let num = 0;
+      let [key1, key2, key3, level1, level2, level3, mod1, mod2, num] = ["", "", "", "", "", "", "", "", 0];
       num = Number(id.substring(1));
       level1 = parseInt(num / 10000000);
-      console.log(level1)
       mod1 = num % 10000000;
       key1 = "C0" + level1 * 10000000;
       if (level1 && mod1 != 0) {
@@ -685,6 +692,26 @@ export default {
       return [key1, key2, key3];
     },
 
+    // 获取币种、产地
+    getBasicOptions() {
+      const that = this;
+      $.ajax({
+          url: api.getBasicOptions(),
+          type: 'GET',
+          dataType: 'json',
+        })
+        .success(function(data) {
+          that.currency = data.data.currency;
+          that.originPlace = data.data.origin;
+          console.log(data);
+        })
+        .error(function() {
+          that.$message({ showClose: true, message: "error", type: 'error' })
+        })
+        .complete(function() {
+          console.log("complete");
+        });
+    },
     /**
      * 语言选择，input toggle
      */
@@ -695,8 +722,50 @@ export default {
       (event.indexOf("日文") != -1) ? this.jaLanguage = false: this.jaLanguage = true;
     },
 
+    // 上传图片
+    updatePic() {
+      let that = this;
+      let lang = event.currentTarget.className
+      console.log(that[lang])
+      //创建FormData对象
+      let data = new FormData();
+      //为FormData对象添加数据
+      $('.updatePicForm').each(function(index, el) {
+        $.each($(this).find('input')[0].files, function(index, val) {
+          data.append('file', val)
+        });
+      });
+      $.ajax({
+          url: api.updatePic(),
+          type: 'POST',
+          dataType: 'JSON',
+          contentType: false,
+          processData: false,
+          data: data,
+          cache: false,
+        })
+        .success(function(data) {
+          console.log(data)
+          that[lang] = data.data.cdnAddr;
+        })
+        .error(function() {
+          console.log("error");
+        })
+        .complete(function() {
+          console.log("complete");
+        });
+
+    },
+
+
+
     openSearchBox() {
+      document.querySelector(".option-search-box").removeAttribute("data-index");
       this.showSearchBox = true;
+      let index = event.currentTarget.getAttribute("data-index");
+      if (index != null) {
+        document.querySelector(".option-search-box").setAttribute("data-index", index)
+      }
     },
     closeSearchBox() {
       this.showSearchBox = false;
@@ -731,22 +800,34 @@ export default {
     },
     // 保存option信息
     saveOptionInfo() {
-      console.log(1)
+      console.log($('.option-search-box').data("index"))
       if (this.optionNameValue && $('.option-info').find('.active-option.option-info-item')) {
         let optionArr = this.optionNameValue.split('/');
         let valueArr = $('.option-info').find('.active-option.option-info-item').text().split("/");
-        this.addSkuOptionLine.push({
-          KoreanOptionName: optionArr[0],
-          ChineseOptionName: optionArr[1],
-          EnglishOptionName: optionArr[2],
-          JapaneseOptionName: optionArr[3],
-          KoreanOptionValue: valueArr[0],
-          ChineseOptionValue: valueArr[1],
-          EnglishOptionValue: valueArr[2],
-          JapaneseOptionValue: valueArr[3]
-        });
+        this.KoreanOptionName = optionArr[0];
+        this.ChineseOptionName = optionArr[1];
+        this.EnglishOptionName = optionArr[2];
+        this.JapaneseOptionName = optionArr[3];
+        this.KoreanOptionValue = valueArr[0];
+        this.ChineseOptionValue = valueArr[1];
+        this.EnglishOptionValue = valueArr[2];
+        this.JapaneseOptionValue = valueArr[3];
         this.showSearchBox = false;
       }
+    },
+    //添加到新增行
+    addOptions() {
+      console.log(this.addSkuOptionLine)
+      this.addSkuOptionLine.push({
+        KoreanOptionName: this.KoreanOptionName,
+        ChineseOptionName: this.ChineseOptionName,
+        EnglishOptionName: this.EnglishOptionName,
+        JapaneseOptionName: this.JapaneseOptionName,
+        KoreanOptionValue: this.KoreanOptionValue,
+        ChineseOptionValue: this.ChineseOptionValue,
+        EnglishOptionValue: this.EnglishOptionValue,
+        JapaneseOptionValue: this.JapaneseOptionValue,
+      });
     },
     // 应用sku，生成sku信息
     applyToBuild() {

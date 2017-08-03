@@ -24,5 +24,8 @@ export default {
   },
   createSku(){
     return _baseUrl + '?g=guds&m=guds_options&a=create'
+  },
+  updatePic(){
+    return _baseUrl + '?g=guds&m=guds&a=uploadGudsImage'
   }
 }
