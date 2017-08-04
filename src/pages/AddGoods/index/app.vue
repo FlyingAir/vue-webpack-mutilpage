@@ -277,7 +277,7 @@
           <table border="0" cellspacing="0" cellpadding="0" class="erp-sku-info">
             <thead>
               <tr>
-                <th style="text-align:center" v-for="item in optionObj">{{item.name}}</th>
+                <th style="text-align:center" v-for="item in optionNameObj">{{item.ALL_VAL}}</th>
                 <th>UPC</th>
                 <th>CR code</th>
                 <th>HS code</th>
@@ -324,9 +324,9 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in skuAddedOption">
-                <td>{{item.optionValue01}}</td>
-                <td>{{item.optionValue02}}</td>
+              <tr v-for="item in optionValueObj">
+                <td>{{ item[(Object.keys(item))[0]].ALL_VAL }}</td>
+                <td>{{ item[(Object.keys(item))[1]].ALL_VAL }}</td>
                 <td>
                   <el-input placeholder="" v-model="item.UPCvalue" class="upc-value"></el-input>
                 </td>
@@ -536,18 +536,11 @@ export default {
       skuPrice: '',
       skuWeight: '',
       skuLength: '',
-      skuAddedOption: [
-        { optionValue01: '黑色', optionValue02: '大', UPCvalue: '', CRcodevalue: '', Hscodevalue: '', pricevalue: '', lengthvalue: '', widthvalue: '', heightvalue: '', weightvalue: '' },
-        { optionValue01: '白色', optionValue02: '中', UPCvalue: '', CRcodevalue: '', Hscodevalue: '', pricevalue: '', lengthvalue: '', widthvalue: '', heightvalue: '', weightvalue: '' },
-        { optionValue01: '蓝色', optionValue02: '小', UPCvalue: '', CRcodevalue: '', Hscodevalue: '', pricevalue: '', lengthvalue: '', widthvalue: '', heightvalue: '', weightvalue: '' }
-      ],
       searchBarValue: '',
       optionNameValue: '',
       // add sku
-      optionObj: [
-        { name: 'size', value: ["big", "middle", "small"] },
-        { name: 'color', value: ["red", "blue", "green"] }
-      ],
+      optionNameObj:{},
+      optionValueObj:{},
 
       optionName: "",
       showSearchBox: false,
@@ -925,6 +918,7 @@ export default {
     // 应用sku，生成sku信息
     applyToBuild() {
       console.log(this.addSkuOptionLine)
+      const that =this;
       let postData={};
       this.addSkuOptionLine.forEach( function(element, index) {
         postData[element.nameCode]=element.valueCode
@@ -938,6 +932,8 @@ export default {
         })
         .success(function(data) {
           console.log(data)
+          that.optionNameObj=data.data.optionNames;
+          that.optionValueObj=data.data.optionGroup;
         })
         .error(function() {
           console.log("error");
