@@ -27,5 +27,8 @@ export default {
   },
   updatePic(){
     return _baseUrl + '?g=guds&m=guds&a=uploadGudsImage'
+  },
+  addNewOptionValue(){
+    return _baseUrl + '?g=guds&m=gudsOptions&a=addNewOptionValue'
   }
 }

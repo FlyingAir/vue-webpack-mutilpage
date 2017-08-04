@@ -24,6 +24,10 @@
     height: 40px;
     line-height: 40px;
     margin: 20px auto 0px;
+    padding:0px 10px;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
   }
   h3 {
     font-size: 18px;

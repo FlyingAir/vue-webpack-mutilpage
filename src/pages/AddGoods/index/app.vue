@@ -203,32 +203,32 @@
                 <td class="option_name">
                   <el-row :gutter="10">
                     <el-col :span="6">
-                      <el-input v-model="KoreanOptionName" placeholder="Korean"></el-input>
+                      <el-input v-model="KoreanOptionName" placeholder="Korean" readonly></el-input>
                     </el-col>
                     <el-col :span="6">
-                      <el-input v-model="ChineseOptionName" placeholder="Chinese"></el-input>
+                      <el-input v-model="ChineseOptionName" placeholder="Chinese" readonly></el-input>
                     </el-col>
                     <el-col :span="6">
-                      <el-input v-model="EnglishOptionName" placeholder="English"></el-input>
+                      <el-input v-model="EnglishOptionName" placeholder="English" readonly></el-input>
                     </el-col>
                     <el-col :span="6">
-                      <el-input v-model="JapaneseOptionName" placeholder="Japanese"></el-input>
+                      <el-input v-model="JapaneseOptionName" placeholder="Japanese" readonly></el-input>
                     </el-col>
                   </el-row>
                 </td>
                 <td class="option_value">
                   <el-row :gutter="10">
                     <el-col :span="5">
-                      <el-input v-model="KoreanOptionValue" placeholder="Korean"></el-input>
+                      <el-input v-model="KoreanOptionValue" placeholder="Korean" readonly></el-input>
                     </el-col>
                     <el-col :span="5">
-                      <el-input v-model="ChineseOptionValue" placeholder="Chinese"></el-input>
+                      <el-input v-model="ChineseOptionValue" placeholder="Chinese" readonly></el-input>
                     </el-col>
                     <el-col :span="5">
-                      <el-input v-model="EnglishOptionValue" placeholder="English"></el-input>
+                      <el-input v-model="EnglishOptionValue" placeholder="English" readonly></el-input>
                     </el-col>
                     <el-col :span="5">
-                      <el-input v-model="JapaneseOptionValue" placeholder="Japanese"></el-input>
+                      <el-input v-model="JapaneseOptionValue" placeholder="Japanese" readonly></el-input>
                     </el-col>
                     <i class="el-icon-search" @click="openSearchBox"></i>
                     <el-button type="button" class='add-sku-btn' icon="plus" @click='addOptions'>添加</el-button>
@@ -239,32 +239,32 @@
                 <td class="option_name">
                   <el-row :gutter="10">
                     <el-col :span="6">
-                      <el-input v-model="item.KoreanOptionName" placeholder="Korean"></el-input>
+                      <el-input v-model="item.KoreanOptionName" placeholder="Korean" readonly></el-input>
                     </el-col>
                     <el-col :span="6">
-                      <el-input v-model="item.ChineseOptionName" placeholder="Chinese"></el-input>
+                      <el-input v-model="item.ChineseOptionName" placeholder="Chinese" readonly></el-input>
                     </el-col>
                     <el-col :span="6">
-                      <el-input v-model="item.EnglishOptionName" placeholder="English"></el-input>
+                      <el-input v-model="item.EnglishOptionName" placeholder="English" readonly></el-input>
                     </el-col>
                     <el-col :span="6">
-                      <el-input v-model="item.JapaneseOptionName" placeholder="Japanese"></el-input>
+                      <el-input v-model="item.JapaneseOptionName" placeholder="Japanese" readonly></el-input>
                     </el-col>
                   </el-row>
                 </td>
                 <td class="option_value">
                   <el-row :gutter="10">
                     <el-col :span="5">
-                      <el-input v-model="item.KoreanOptionValue" placeholder="Korean"></el-input>
+                      <el-input v-model="item.KoreanOptionValue" placeholder="Korean" readonly></el-input>
                     </el-col>
                     <el-col :span="5">
-                      <el-input v-model="item.ChineseOptionValue" placeholder="Chinese"></el-input>
+                      <el-input v-model="item.ChineseOptionValue" placeholder="Chinese" readonly></el-input>
                     </el-col>
                     <el-col :span="5">
-                      <el-input v-model="item.EnglishOptionValue" placeholder="English"></el-input>
+                      <el-input v-model="item.EnglishOptionValue" placeholder="English" readonly></el-input>
                     </el-col>
                     <el-col :span="5">
-                      <el-input v-model="item.JapaneseOptionValue" placeholder="Japanese"></el-input>
+                      <el-input v-model="item.JapaneseOptionValue" placeholder="Japanese" readonly></el-input>
                     </el-col>
                     <i class="el-icon-search" @click="openSearchBox($event)" :data-index="index"></i>
                     <i class="el-icon-delete2" @click="delSkuOption(index)"></i>
@@ -365,20 +365,20 @@
         <h4>option 名字</h4>
         <el-row :gutter="20" class="option-search">
           <el-col :span="14">
-            <el-select v-model="optionNameValue" placeholder="请选择" class="selectOptionName">
-              <el-option v-for="item in optionName" :key="item.value" :label="item.label" :value="item.value">
+            <el-select v-model="optionNameValue" placeholder="请选择" class="selectOptionName" @change="selectOptionName($event)">
+              <el-option class="OptionNameList" v-for="item in optionName" :key="item.ALL_VAL" :label="item.ALL_VAL" :value="item.ALL_VAL" :data-id="item.CODE">
               </el-option>
             </el-select>
           </el-col>
           <el-col :span="10">
-            <el-input placeholder="" icon="search" v-model="searchBarValue" :on-icon-click="searchOptionName">
+            <el-input placeholder="" icon="search" v-model="searchBarValue" class="search-optioninfo" :on-icon-click="searchOptionName">
             </el-input>
           </el-col>
         </el-row>
         <h4>option 信息</h4>
         <el-row :gutter="10" class="option-info">
           <el-col :span="6" v-for="item in optionInfoItem">
-            <div class="option-info-item" @click="chooseOptionItem($event)">{{item.info}}</div>
+            <div :title="item.ALL_VAL" class="option-info-item" @click="chooseOptionItem($event)" :data-id="item.CODE">{{item.ALL_VAL}}</div>
           </el-col>
         </el-row>
         <h4>添加 option</h4>
@@ -455,16 +455,7 @@ export default {
       // 商品ID
       brandId: '',
       // 商品单位
-      goodsUnit: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }],
+      goodsUnit: "",
       goodsUnitValue: '',
 
       // 多国主图
@@ -507,25 +498,22 @@ export default {
       ChineseOptionName: '',
       EnglishOptionName: '',
       JapaneseOptionName: '',
+
+      //保存optionNameId
+      optionNameId: '',
+
+      // 点击保存时添加新增的option信息
+      AddOptionPostData:{
+        "optNameCode":"", 
+        "optValues": []
+      },
       //option-value
       KoreanOptionValue: '',
       ChineseOptionValue: '',
       EnglishOptionValue: '',
       JapaneseOptionValue: '',
       // 搜索option列表
-      optionInfoItem: [{
-        info: "100/100/100/Ja"
-      }, {
-        info: "100/100/100/Ja"
-      }, {
-        info: "100/100/100/Ja"
-      }, {
-        info: "100/100/100/Ja"
-      }, {
-        info: "100/100/100/Ja"
-      }, {
-        info: "100/100/100/Ja"
-      }],
+      optionInfoItem: "",
       //sku属性选择
       addSkuOptionLine: [{
         KoreanOptionName: '1',
@@ -535,8 +523,14 @@ export default {
         KoreanOptionValue: '5',
         ChineseOptionValue: '6',
         EnglishOptionValue: '7',
-        JapaneseOptionValue: '8'
+        JapaneseOptionValue: '8',
+        nameCode:'8001',
+        valueCode:"800126,800127,800130",
       }],
+      // 存储optionName ID
+      // 存储optionValue ID
+      nameCode:'',
+      valueCode:"",
       skuWidth: '',
       skuHeight: '',
       skuPrice: '',
@@ -548,20 +542,14 @@ export default {
         { optionValue01: '蓝色', optionValue02: '小', UPCvalue: '', CRcodevalue: '', Hscodevalue: '', pricevalue: '', lengthvalue: '', widthvalue: '', heightvalue: '', weightvalue: '' }
       ],
       searchBarValue: '',
-      optionNameValue: '颜色',
+      optionNameValue: '',
       // add sku
       optionObj: [
         { name: 'size', value: ["big", "middle", "small"] },
         { name: 'color', value: ["red", "blue", "green"] }
       ],
 
-      optionName: [{
-        value: '颜色/color/yanse/yan',
-        label: '颜色/color/yanse/yan'
-      }, {
-        value: '尺寸/size/chicun/chi',
-        label: '尺寸/size/chicun/chi'
-      }],
+      optionName: "",
       showSearchBox: false,
     }
   },
@@ -691,27 +679,6 @@ export default {
       }
       return [key1, key2, key3];
     },
-
-    // 获取币种、产地
-    getBasicOptions() {
-      const that = this;
-      $.ajax({
-          url: api.getBasicOptions(),
-          type: 'GET',
-          dataType: 'json',
-        })
-        .success(function(data) {
-          that.currency = data.data.currency;
-          that.originPlace = data.data.origin;
-          console.log(data);
-        })
-        .error(function() {
-          that.$message({ showClose: true, message: "error", type: 'error' })
-        })
-        .complete(function() {
-          console.log("complete");
-        });
-    },
     /**
      * 语言选择，input toggle
      */
@@ -757,7 +724,49 @@ export default {
 
     },
 
+    //----------------------------------------------------------------------------
+    //----------------------------------------------------------------------------
+    //----------------------------------------------------------------------------
+    //----------------------------------------------------------------------------
+    //----------------------------------------------------------------------------
+    //----------------------------------------------------------------------------
 
+    // 获取币种、产地
+    getBasicOptions() {
+      const that = this;
+      $.ajax({
+          url: api.getBasicOptions(),
+          type: 'GET',
+          dataType: 'json',
+        })
+        .success(function(data) {
+          that.currency = data.data.currency;
+          that.originPlace = data.data.origin;
+          that.optionName = data.data.options;
+          console.log(data);
+        })
+        .error(function() {
+          that.$message({ showClose: true, message: "error", type: 'error' })
+        })
+        .complete(function() {
+          console.log("complete");
+        });
+    },
+    //选择option名字，渲染option信息
+    selectOptionName() {
+      const that = this;
+      that.optionNameId = event.currentTarget.getAttribute("data-id");
+      $.getJSON(api.getOptionValues(that.optionNameId), function(data, textStatus) {
+        console.log(data);
+        that.optionInfoItem = data.data;
+        //初始化 要添加的信息
+        that.AddOptionPostData={
+          "optNameCode":"", 
+          "optValues": []
+        }
+        $('.option-info-item.active-option').removeClass('active-option');
+      });
+    },
 
     openSearchBox() {
       document.querySelector(".option-search-box").removeAttribute("data-index");
@@ -770,12 +779,20 @@ export default {
     closeSearchBox() {
       this.showSearchBox = false;
     },
+    // 搜索option info
     searchOptionName() {
-
+      const that = this;
+      let searchKey = $('.search-optioninfo').find('input').val()
+      if (searchKey != "") {
+        $.getJSON(api.searchOptionValue(that.optionNameId, searchKey), function(data, textStatus) {
+          that.optionInfoItem = data.data;
+        });
+      }
     },
     // 删除sku属性行
     delSkuOption(index) {
       this.addSkuOptionLine.splice(index, 1);
+      console.log(this.addSkuOptionLine)
     },
     handleClose(done) {
       done();
@@ -786,38 +803,111 @@ export default {
       let addOption = [];
       let addStr = '';
       let html = '';
+      let id = '';
+      for( var key in this.optionInfoItem){
+          id=key;
+      }
       $('.option-add').find('input').each(function(index, el) {
         $(this).data('default', defaultOption[index]);
         ($(this).val()) ? addOption.push($(this).val()): addOption.push($(this).data('default'));
       });
       addStr = addOption.join('/');
-      this.optionInfoItem.push({ info: addStr })
+      this.AddOptionPostData.optNameCode=this.optionNameId;
+      this.AddOptionPostData.optValues.push({"KR": addOption[0],"CN": addOption[1],"EN": addOption[2],"JP": addOption[3]})
+      this.$set(this.optionInfoItem,(parseInt(id)+1),{
+          ALL_VAL:addStr,
+          CODE:(parseInt(id)+1)
+      })
+      setTimeout(function(){
+        $('.option-info-item').each(function(index, el) {   
+          if(el.getAttribute("data-id")==(parseInt(id)+1)){
+            $(el).addClass('active-option')
+          }
+        });
+      })
+      
+      // console.log(this.AddOptionPostData)
+
     },
     // 选择option信息
     chooseOptionItem(event) {
-      $('.active-option.option-info-item').removeClass('active-option')
-      event.currentTarget.setAttribute('class', 'active-option option-info-item');
+      $(event.currentTarget).toggleClass('active-option');
     },
     // 保存option信息
     saveOptionInfo() {
-      console.log($('.option-search-box').data("index"))
-      if (this.optionNameValue && $('.option-info').find('.active-option.option-info-item')) {
-        let optionArr = this.optionNameValue.split('/');
-        let valueArr = $('.option-info').find('.active-option.option-info-item').text().split("/");
-        this.KoreanOptionName = optionArr[0];
-        this.ChineseOptionName = optionArr[1];
-        this.EnglishOptionName = optionArr[2];
-        this.JapaneseOptionName = optionArr[3];
-        this.KoreanOptionValue = valueArr[0];
-        this.ChineseOptionValue = valueArr[1];
-        this.EnglishOptionValue = valueArr[2];
-        this.JapaneseOptionValue = valueArr[3];
-        this.showSearchBox = false;
-      }
+      //添加
+      let postData=JSON.stringify(this.AddOptionPostData);
+      $.post(api.addNewOptionValue(), postData, function(data, textStatus, xhr) {       
+        //保存
+      });
+      let index = document.querySelector(".option-search-box").getAttribute("data-index");
+        console.log(index)
+        if (index != null) {
+          if (this.optionNameValue && $('.option-info').find('.active-option.option-info-item')) {
+            let [krVal,cnVal,enVal,jaVal]=["","","",""];
+            let optionArr = this.optionNameValue.split('/');
+            let valueCode="";
+            $('.active-option.option-info-item').each(function(index, el) {
+                krVal+=el.innerText.split("/")[0]+' ; '
+                cnVal+=el.innerText.split("/")[1]+' ; '
+                enVal+=el.innerText.split("/")[2]+' ; '
+                jaVal+=el.innerText.split("/")[3]+' ; '
+                valueCode+=el.getAttribute("data-id")+","
+            });
+            krVal=krVal.substring(0,krVal.length-2);
+            cnVal=cnVal.substring(0,cnVal.length-2);
+            enVal=enVal.substring(0,enVal.length-2);
+            jaVal=jaVal.substring(0,jaVal.length-2);
+            this.addSkuOptionLine[index] = {
+              KoreanOptionName: optionArr[0],
+              ChineseOptionName: optionArr[1],
+              EnglishOptionName: optionArr[2],
+              JapaneseOptionName: optionArr[3],
+              KoreanOptionValue: krVal,
+              ChineseOptionValue: cnVal,
+              EnglishOptionValue: enVal,
+              JapaneseOptionValue: jaVal,
+              nameCode: this.optionNameId,
+              valueCode: valueCode.substring(0,valueCode.length-1)
+            }
+            this.showSearchBox = false;
+          }
+  
+        } else {
+          if (this.optionNameValue && $('.option-info').find('.active-option.option-info-item')) {
+            let [krVal,cnVal,enVal,jaVal]=["","","",""];
+            let valueCode="";
+            $('.active-option.option-info-item').each(function(index, el) {
+                krVal+=el.innerText.split("/")[0]+' ; '
+                cnVal+=el.innerText.split("/")[1]+' ; '
+                enVal+=el.innerText.split("/")[2]+' ; '
+                jaVal+=el.innerText.split("/")[3]+' ; '
+                valueCode+=el.getAttribute("data-id")+","
+            });
+            krVal=krVal.substring(0,krVal.length-2);
+            cnVal=cnVal.substring(0,cnVal.length-2);
+            enVal=enVal.substring(0,enVal.length-2);
+            jaVal=jaVal.substring(0,jaVal.length-2);
+  
+            let optionArr = this.optionNameValue.split('/');
+            this.KoreanOptionName = optionArr[0];
+            this.ChineseOptionName = optionArr[1];
+            this.EnglishOptionName = optionArr[2];
+            this.JapaneseOptionName = optionArr[3];
+            this.KoreanOptionValue = krVal;
+            this.ChineseOptionValue = cnVal;
+            this.EnglishOptionValue = enVal;
+            this.JapaneseOptionValue = jaVal;
+            this.valueCode = valueCode.substring(0,valueCode.length-1)
+            this.showSearchBox = false;
+          }
+        }
+        // console.log(this.addSkuOptionLine)
+      
     },
     //添加到新增行
     addOptions() {
-      console.log(this.addSkuOptionLine)
+      // console.log(this.addSkuOptionLine)
       this.addSkuOptionLine.push({
         KoreanOptionName: this.KoreanOptionName,
         ChineseOptionName: this.ChineseOptionName,
@@ -827,21 +917,34 @@ export default {
         ChineseOptionValue: this.ChineseOptionValue,
         EnglishOptionValue: this.EnglishOptionValue,
         JapaneseOptionValue: this.JapaneseOptionValue,
+        nameCode: this.optionNameId,
+        valueCode:this.valueCode
+
       });
     },
     // 应用sku，生成sku信息
     applyToBuild() {
-      let that = this;
-      this.optionObj = [];
-      $('.added-sku-option').each(function(index, el) {
-        let obj = {};
-        let item = $(this).find('.option_name').find('.el-col').first().next().find('input');
-        let value = $(this).find('.option_value').find('.el-col').first().next().find('input');
-
-        console.log(this.optionObj)
+      console.log(this.addSkuOptionLine)
+      let postData={};
+      this.addSkuOptionLine.forEach( function(element, index) {
+        postData[element.nameCode]=element.valueCode
       });
-      console.log(that.optionNameArr)
-      console.log(that.optionValueArr)
+      $.ajax({
+          url: api.getOptionGroup(),
+          type: 'POST',
+          dataType: 'JSON',
+          data: JSON.stringify(postData),
+          cache: false,
+        })
+        .success(function(data) {
+          console.log(data)
+        })
+        .error(function() {
+          console.log("error");
+        })
+        .complete(function() {
+          console.log("complete");
+        });
     }
   },
   watch: {
