@@ -269,7 +269,7 @@
                     <el-col :span="5">
                       <el-input v-model="item.JapaneseOptionValue" :title="item.JapaneseOptionValue" placeholder="Japanese" readonly></el-input>
                     </el-col>
-                    <i class="el-icon-search" @click="openSearchBox($event)" :data-index="index"></i>
+                    <i class="el-icon-search" @click="openSearchBox($event)" :data-index="index" :data-code="item.nameCode"></i>
                     <i class="el-icon-delete2" @click="delSkuOption(index)"></i>
                   </el-row>
                 </td>
@@ -853,10 +853,13 @@ export default {
 
     openSearchBox() {
       document.querySelector(".option-search-box").removeAttribute("data-index");
+      document.querySelector(".option-search-box").removeAttribute("data-code");
       this.showSearchBox = true;
       let index = event.currentTarget.getAttribute("data-index");
+      let code = event.currentTarget.getAttribute("data-code");
       if (index != null) {
         document.querySelector(".option-search-box").setAttribute("data-index", index)
+        document.querySelector(".option-search-box").setAttribute("data-code", code)
       }
     },
     closeSearchBox() {
@@ -895,22 +898,21 @@ export default {
         ($(this).val()) ? addOption.push($(this).val()): addOption.push($(this).data('default'));
       });
       addStr = addOption.join('/');
-      this.AddOptionPostData.optNameCode=this.optionNameId;
-      this.AddOptionPostData.optValues.push({"KR": addOption[0],"CN": addOption[1],"EN": addOption[2],"JP": addOption[3]})
-      this.$set(this.optionInfoItem,(parseInt(id)+1),{
-          ALL_VAL:addStr,
-          CODE:(parseInt(id)+1)
-      })
-      setTimeout(function(){
-        $('.option-info-item').each(function(index, el) {   
-          if(el.getAttribute("data-id")==(parseInt(id)+1)){
-            $(el).addClass('active-option')
-          }
-        });
-      })
-      
-      console.log(this.AddOptionPostData)
-
+      if(addStr!='Kr/Cn/En/Ja'){
+        this.AddOptionPostData.optNameCode=this.optionNameId;
+        this.AddOptionPostData.optValues.push({"KR": addOption[0],"CN": addOption[1],"EN": addOption[2],"JP": addOption[3]})
+        this.$set(this.optionInfoItem,(parseInt(id)+1),{
+            ALL_VAL:addStr,
+            CODE:(parseInt(id)+1)
+        })
+        setTimeout(function(){
+          $('.option-info-item').each(function(index, el) {   
+            if(el.getAttribute("data-id")==(parseInt(id)+1)){
+              $(el).addClass('active-option')
+            }
+          });
+        })
+      }   
     },
     // 选择option信息
     chooseOptionItem(event) {
@@ -924,6 +926,7 @@ export default {
         //保存
       });
       let index = document.querySelector(".option-search-box").getAttribute("data-index");
+      let thisCode = document.querySelector(".option-search-box").getAttribute("data-code")
         console.log(index)
         // 已经添加的
         if (index != null) {
@@ -946,15 +949,17 @@ export default {
             // 判断是否有相同的属性
             const vm = this;
             let flag = true;
+            
+  
             vm.addSkuOptionLine.forEach( function(element, index) {
-              if(element["nameCode"]==vm.optionNameId){
+              if(element["nameCode"]==vm.optionNameId && element["nameCode"]!=thisCode){
                 flag = false;
                 vm.$alert("已经存在相同的optionName",{
                    confirmButtonText: '确定',
                 })       
               }
             });
-            if(flag==true){
+            if(flag){
               vm.addSkuOptionLine[index] = {
                 KoreanOptionName: optionArr[0],
                 ChineseOptionName: optionArr[1],
@@ -991,42 +996,60 @@ export default {
             
             // 判断是否有相同的属性
             const vm =this;
+            let flag = true;
             vm.addSkuOptionLine.forEach( function(element, index) {
               if(element["nameCode"]==vm.optionNameId){
-                
+                flag = false;
+                vm.$alert("已经存在相同的optionName",{
+                   confirmButtonText: '确定',
+                })       
               }
             });
-            vm.KoreanOptionName = optionArr[0];
-            vm.ChineseOptionName = optionArr[1];
-            vm.EnglishOptionName = optionArr[2];
-            vm.JapaneseOptionName = optionArr[3];
-            vm.KoreanOptionValue = krVal;
-            vm.ChineseOptionValue = cnVal;
-            vm.EnglishOptionValue = enVal;
-            vm.JapaneseOptionValue = jaVal;
-            vm.valueCode = valueCode.substring(0,valueCode.length-1)
-            vm.showSearchBox = false;
-          }
+            if (flag){
+                vm.KoreanOptionName = optionArr[0];
+                vm.ChineseOptionName = optionArr[1];
+                vm.EnglishOptionName = optionArr[2];
+                vm.JapaneseOptionName = optionArr[3];
+                vm.KoreanOptionValue = krVal;
+                vm.ChineseOptionValue = cnVal;
+                vm.EnglishOptionValue = enVal;
+                vm.JapaneseOptionValue = jaVal;
+                vm.valueCode = valueCode.substring(0,valueCode.length-1)
+                $('.add-sku-btn').attr('data-id',)
+                vm.showSearchBox = false;              
+            }
         }
-        console.log(this.addSkuOptionLine)
-      
-    },
+        console.log(this.addSkuOptionLine)     
+    }
+  },
     //添加到新增行
     addOptions() {
-      console.log(this.addSkuOptionLine)
-      this.addSkuOptionLine.push({
-        KoreanOptionName: this.KoreanOptionName,
-        ChineseOptionName: this.ChineseOptionName,
-        EnglishOptionName: this.EnglishOptionName,
-        JapaneseOptionName: this.JapaneseOptionName,
-        KoreanOptionValue: this.KoreanOptionValue,
-        ChineseOptionValue: this.ChineseOptionValue,
-        EnglishOptionValue: this.EnglishOptionValue,
-        JapaneseOptionValue: this.JapaneseOptionValue,
-        nameCode: this.optionNameId,
-        valueCode:this.valueCode
-
-      });
+      if(this.ChineseOptionName&&this.ChineseOptionName){
+             this.addSkuOptionLine.push({
+              KoreanOptionName: this.KoreanOptionName,
+              ChineseOptionName: this.ChineseOptionName,
+              EnglishOptionName: this.EnglishOptionName,
+              JapaneseOptionName: this.JapaneseOptionName,
+              KoreanOptionValue: this.KoreanOptionValue,
+              ChineseOptionValue: this.ChineseOptionValue,
+              EnglishOptionValue: this.EnglishOptionValue,
+              JapaneseOptionValue: this.JapaneseOptionValue,
+              nameCode: this.optionNameId,
+              valueCode:this.valueCode
+            });
+            this.KoreanOptionName="";
+            this.ChineseOptionName="";
+            this.EnglishOptionName="";
+            this.JapaneseOptionName="";
+            this.KoreanOptionValue="";
+            this.ChineseOptionValue="";
+            this.EnglishOptionValue="";
+            this.JapaneseOptionValue="";
+      }else{
+        this.$alert("请输入Chinese OptionName and OptionValue",{
+            confirmButtonText: '确定',
+        })   
+      }
     },
     // 应用sku，生成sku信息
     applyToBuild() {
@@ -1074,7 +1097,7 @@ export default {
         optionGroup.push(element)
       });
       let postData={
-        "sellerId": vm.brandNameValue,     //SPU 页面上选择的品牌ID
+        "sellerId": vm.brandId,     //SPU 页面上选择的品牌ID
         "gudsId":vm.gudsId ,  //SPU 商品保存后的SPU ID
         "mainGudsId": vm.mainGudsId,// 这里是坑
         "origin": vm.originPlaceId,//产地代码，CODE值
