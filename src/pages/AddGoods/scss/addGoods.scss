@@ -24,10 +24,10 @@
     height: 40px;
     line-height: 40px;
     margin: 20px auto 0px;
-    padding:0px 10px;
-    overflow:hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
+    padding: 0px 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
   h3 {
     font-size: 18px;
@@ -217,7 +217,6 @@
 .erp-goods-pic {
   width: 100%;
   border: 1px solid #CADEE7;
-  margin-bottom: 200px;
   td {
     padding: 28px 30px 35px;
     .img-content {
@@ -225,10 +224,10 @@
       height: 300px;
       min-width: 267px;
       border: 1px solid #C8D2D7;
-      margin:0px auto;
-      img{
-          max-height:300px;
-          max-width: 300px;
+      margin: 0px auto;
+      img {
+        max-height: 300px;
+        max-width: 300px;
       }
     }
     span {
@@ -255,7 +254,7 @@
       height: 26px;
       cursor: pointer;
       text-decoration: none;
-      line-height:26px;
+      line-height: 26px;
     }
     .file input {
       position: absolute;
@@ -267,6 +266,7 @@
 }
 
 .erp-addgoods-btns,
+.erp-addbasic-btns,
 .erp-addsku-btns {
   margin: 60px 0px 100px;
   button {
@@ -443,12 +443,15 @@
 .erp-sku-info {
   width: 100%;
   border: 1px solid #CADEE7;
+  tbody{
+    width:100%;
+  }
   thead {
     background: #F7F9FB;
+    width:100%;
     th {
       border-right: 1px solid #CADEE7;
       border-bottom: 1px solid #CADEE7;
-      width: 10%;
       height: 50px;
       font-size: 13px;
       color: #546E7A;
@@ -473,6 +476,15 @@
     letter-spacing: 0;
     border-bottom: 1px solid #CADEE7;
   }
+  .required_info{
+    color:red;
+  }
+  .el-row{
+    height:33px;
+  }
+  tr:nth-child(2n){
+    background-color: #fafafa;
+  }
 }
 
 .option-info-item.active-option {
@@ -484,7 +496,7 @@
 
 select[name=select_category] {
   width: 100%;
-  border:1px solid #bfcbd9;
+  border: 1px solid #bfcbd9;
   height: 190px;
   padding: 8px;
   font-size: 14px;

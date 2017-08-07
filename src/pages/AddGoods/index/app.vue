@@ -9,8 +9,8 @@
               <tr class="tr-1">
                 <td class="info-title">品牌名</td>
                 <td>
-                  <el-select v-model="brandNameValue" placeholder="请选择" @change="getBrandInfo" filterable>
-                    <el-option class="brandlist" v-for="(value,key,index) in brandName" :key="value.brandId" :data-id="value.brandId" :label="key" :value="key">
+                  <el-select v-model="brandNameValue" placeholder="请选择" @change="getBrandInfo($event)" filterable>
+                    <el-option class="brandlist" v-for="(value,key,index) in brandName" :key="value.brandId" :data-id="value.brandId" :label="value.brandCnName" :value="value.brandCnName">
                     </el-option>
                   </el-select>
                 </td>
@@ -144,47 +144,50 @@
             <tbody>
               <tr>
                 <td>
-                  <div class='img-content'><img :src="cnPic" alt=""></div>
+                  <div class='img-content'  v-loading="loading" element-loading-text="拼命加载中"><img :src="cnPic" alt=""></div>
                   <span>中文主图</span>
                   <form action="" class="updatePicForm">
-                    <a href="javascript:;" class="file">选择文件<input type="file" @change="updatePic($event)" class='cnPic' data-content="cnContent"></a>
+                    <a href="javascript:;" class="file">选择文件<input type="file" @change="updatePic($event)" class='cnPic' id="cnContent" data-content="cnContent"></a>
                   </form>
                 </td>
                 <td>
                   <div class='img-content'><img :src="enPic" alt=""></div>
                   <span>英文主图</span>
                   <form action="" class="updatePicForm">
-                    <a href="javascript:;" class="file">选择文件<input type="file" @change="updatePic($event)" class='enPic' data-content="enContent"></a>
+                    <a href="javascript:;" class="file">选择文件<input type="file" @change="updatePic($event)" class='enPic' id="enContent" data-content="enContent"></a>
                   </form>
                 </td>
                 <td>
                   <div class='img-content'><img :src="krPic" alt=""></div>
                   <span>韩文主图</span>
                   <form action="" class="updatePicForm">
-                    <a href="javascript:;" class="file">选择文件<input type="file" @change="updatePic($event)" class='krPic' data-content="krContent"></a>
+                    <a href="javascript:;" class="file">选择文件<input type="file" @change="updatePic($event)" class='krPic' id="krContent" data-content="krContent"></a>
                   </form>
                 </td>
                 <td>
                   <div class='img-content'><img :src="jaPic" alt=""></div>
                   <span>日文主图</span>
                   <form action="" class="updatePicForm">
-                    <a href="javascript:;" class="file">选择文件<input type="file" @change="updatePic($event)" class='jaPic' data-content="jaContent"></a>
+                    <a href="javascript:;" class="file">选择文件<input type="file" @change="updatePic($event)" class='jaPic' id="jaContent" data-content="jaContent"></a>
                   </form>
                 </td>
               </tr>
             </tbody>
           </table>
+          <div class="erp-addbasic-btns">
+            <el-button type="primary" @click="createGoodBasic">保存</el-button>
+          </div>
         </el-tab-pane>
         <el-tab-pane label="SKU信息" name="second">
           <div class="sku-item">
             <span>币种</span>
-            <el-select v-model="currencyValue" placeholder="请选择" id='currency_choice'>
-              <el-option v-for="item in currency" :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL">
+            <el-select v-model="currencyValue" placeholder="请选择" id='currency_choice' @change="selectCurrency($event)">
+              <el-option v-for="item in currency" :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" :data-id="item.CD">
               </el-option>
             </el-select>
             <span>产地</span>
-            <el-select v-model="originPlaceValue" placeholder="请选择">
-              <el-option v-for="item in originPlace" :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL">
+            <el-select v-model="originPlaceValue" placeholder="请选择" @change="selectOriginPlace($event)">
+              <el-option v-for="item in originPlace" :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" :data-id="item.CD">
               </el-option>
             </el-select>
           </div>
@@ -203,32 +206,32 @@
                 <td class="option_name">
                   <el-row :gutter="10">
                     <el-col :span="6">
-                      <el-input v-model="KoreanOptionName" placeholder="Korean" readonly></el-input>
+                      <el-input v-model="KoreanOptionName" :title="KoreanOptionName" placeholder="Korean" readonly></el-input>
                     </el-col>
                     <el-col :span="6">
-                      <el-input v-model="ChineseOptionName" placeholder="Chinese" readonly></el-input>
+                      <el-input v-model="ChineseOptionName" :title="ChineseOptionName" placeholder="Chinese" readonly></el-input>
                     </el-col>
                     <el-col :span="6">
-                      <el-input v-model="EnglishOptionName" placeholder="English" readonly></el-input>
+                      <el-input v-model="EnglishOptionName"  :title="EnglishOptionName" placeholder="English" readonly></el-input>
                     </el-col>
                     <el-col :span="6">
-                      <el-input v-model="JapaneseOptionName" placeholder="Japanese" readonly></el-input>
+                      <el-input v-model="JapaneseOptionName" :title="JapaneseOptionName" placeholder="Japanese" readonly></el-input>
                     </el-col>
                   </el-row>
                 </td>
                 <td class="option_value">
                   <el-row :gutter="10">
                     <el-col :span="5">
-                      <el-input v-model="KoreanOptionValue" placeholder="Korean" readonly></el-input>
+                      <el-input v-model="KoreanOptionValue" :title="KoreanOptionValue" placeholder="Korean" readonly></el-input>
                     </el-col>
                     <el-col :span="5">
-                      <el-input v-model="ChineseOptionValue" placeholder="Chinese" readonly></el-input>
+                      <el-input v-model="ChineseOptionValue" :title="ChineseOptionValue" placeholder="Chinese" readonly></el-input>
                     </el-col>
                     <el-col :span="5">
-                      <el-input v-model="EnglishOptionValue" placeholder="English" readonly></el-input>
+                      <el-input v-model="EnglishOptionValue" :title="EnglishOptionValue" placeholder="English" readonly></el-input>
                     </el-col>
                     <el-col :span="5">
-                      <el-input v-model="JapaneseOptionValue" placeholder="Japanese" readonly></el-input>
+                      <el-input v-model="JapaneseOptionValue" :title="JapaneseOptionValue" placeholder="Japanese" readonly></el-input>
                     </el-col>
                     <i class="el-icon-search" @click="openSearchBox"></i>
                     <el-button type="button" class='add-sku-btn' icon="plus" @click='addOptions'>添加</el-button>
@@ -239,32 +242,32 @@
                 <td class="option_name">
                   <el-row :gutter="10">
                     <el-col :span="6">
-                      <el-input v-model="item.KoreanOptionName" placeholder="Korean" readonly></el-input>
+                      <el-input v-model="item.KoreanOptionName" :title="item.KoreanOptionName" placeholder="Korean" readonly></el-input>
                     </el-col>
                     <el-col :span="6">
-                      <el-input v-model="item.ChineseOptionName" placeholder="Chinese" readonly></el-input>
+                      <el-input v-model="item.ChineseOptionName" :title="item.ChineseOptionName" placeholder="Chinese" readonly></el-input>
                     </el-col>
                     <el-col :span="6">
-                      <el-input v-model="item.EnglishOptionName" placeholder="English" readonly></el-input>
+                      <el-input v-model="item.EnglishOptionName" :title="item.EnglishOptionName" placeholder="English" readonly></el-input>
                     </el-col>
                     <el-col :span="6">
-                      <el-input v-model="item.JapaneseOptionName" placeholder="Japanese" readonly></el-input>
+                      <el-input v-model="item.JapaneseOptionName" :title="item.JapaneseOptionName" placeholder="Japanese" readonly></el-input>
                     </el-col>
                   </el-row>
                 </td>
                 <td class="option_value">
                   <el-row :gutter="10">
                     <el-col :span="5">
-                      <el-input v-model="item.KoreanOptionValue" placeholder="Korean" readonly></el-input>
+                      <el-input v-model="item.KoreanOptionValue" :title="item.KoreanOptionValue" placeholder="Korean" readonly></el-input>
                     </el-col>
                     <el-col :span="5">
-                      <el-input v-model="item.ChineseOptionValue" placeholder="Chinese" readonly></el-input>
+                      <el-input v-model="item.ChineseOptionValue" :title="item.ChineseOptionValue" placeholder="Chinese" readonly></el-input>
                     </el-col>
                     <el-col :span="5">
-                      <el-input v-model="item.EnglishOptionValue" placeholder="English" readonly></el-input>
+                      <el-input v-model="item.EnglishOptionValue" :title="item.EnglishOptionValue" placeholder="English" readonly></el-input>
                     </el-col>
                     <el-col :span="5">
-                      <el-input v-model="item.JapaneseOptionValue" placeholder="Japanese" readonly></el-input>
+                      <el-input v-model="item.JapaneseOptionValue" :title="item.JapaneseOptionValue" placeholder="Japanese" readonly></el-input>
                     </el-col>
                     <i class="el-icon-search" @click="openSearchBox($event)" :data-index="index"></i>
                     <i class="el-icon-delete2" @click="delSkuOption(index)"></i>
@@ -274,10 +277,10 @@
             </tbody>
           </table>
           <header>SKU信息</header>
-          <table border="0" cellspacing="0" cellpadding="0" class="erp-sku-info">
+          <table border="0" cellspacing="0" cellpadding="0" class="erp-sku-info" >
             <thead>
               <tr>
-                <th style="text-align:center" v-for="item in optionNameObj">{{item.ALL_VAL}}</th>
+                <th style="text-align:center" v-for="item in optionNameObj" > {{item.ALL_VAL}} </th>
                 <th>UPC</th>
                 <th>CR code</th>
                 <th>HS code</th>
@@ -315,7 +318,7 @@
                 </th>
                 <th>
                   <el-row :gutter="10">
-                    <el-col :span="10"><span>重量(g)</span></el-col>
+                    <el-col :span="10"><span class="required_info"> 重量(g)</span></el-col>
                     <el-col :span="14">
                       <el-input v-model="skuWeight" placeholder="批量输入"></el-input>
                     </el-col>
@@ -324,38 +327,40 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in optionValueObj">
-                <td>{{ item[(Object.keys(item))[0]].ALL_VAL }}</td>
-                <td>{{ item[(Object.keys(item))[1]].ALL_VAL }}</td>
+              <tr v-for="(item,index) in optionValueObj">
+                
+                <td v-for="it in item" :title="it.ALL_VAL">{{ it.ALL_VAL }}</td>
+                <!-- <td>{{it}}</td> -->
+                <!-- <td>{{ item[(Object.keys(item))[1]].ALL_VAL }}</td> -->
                 <td>
-                  <el-input placeholder="" v-model="item.UPCvalue" class="upc-value"></el-input>
+                  <el-input placeholder="" class="upc-value"></el-input>
                 </td>
                 <td>
-                  <el-input placeholder="" v-model="item.CRcodevalue" class="cr-code-value"></el-input>
+                  <el-input placeholder="" class="cr-code-value"></el-input>
                 </td>
                 <td>
-                  <el-input placeholder="" v-model="item.Hscodevalue" class="hs-code-value"></el-input>
+                  <el-input placeholder="" class="hs-code-value"></el-input>
                 </td>
                 <td>
-                  <el-input placeholder="" v-model="item.pricevalue" class="price-value"></el-input>
+                  <el-input placeholder="" class="price-value"></el-input>
                 </td>
                 <td>
-                  <el-input placeholder="" v-model="item.lengthvalue" class="length-value"></el-input>
+                  <el-input placeholder=""  class="length-value"></el-input>
                 </td>
                 <td>
-                  <el-input placeholder="" v-model="item.widthvalue" class="width-value"></el-input>
+                  <el-input placeholder="" class="width-value"></el-input>
                 </td>
                 <td>
-                  <el-input placeholder="" v-model="item.heightvalue" class="height-value"></el-input>
+                  <el-input placeholder=""  class="height-value"></el-input>
                 </td>
                 <td>
-                  <el-input placeholder="" v-model="item.weightvalue" class="weight-value"></el-input>
+                  <el-input placeholder=""  class="weight-value"></el-input>
                 </td>
               </tr>
             </tbody>
           </table>
           <div class="erp-addsku-btns">
-            <el-button type="primary">保存</el-button>
+            <el-button type="primary" @click="createGood">保存</el-button>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -425,6 +430,7 @@ import api from '../../../api/index.js'
 export default {
   data() {
     return {
+      loading:false,
       // 遮罩层
       maskBox: false,
       activeName: 'first',
@@ -452,7 +458,7 @@ export default {
       catLv2: [],
       catLv3: [],
       catLv4: [],
-      // 商品ID
+      // 品牌ID
       brandId: '',
       // 商品单位
       goodsUnit: "",
@@ -460,14 +466,26 @@ export default {
 
       // 多国主图
       cnPic: '',
+      cnContent:"",
       enPic: '',
+      enContent:"",
       krPic: '',
+      krContent:"",
       jaPic: '',
+      jaContent:"",
+
+
+
+      // 存返回的MainID
+      mainGudsId:"",
+      gudsId:"",
       //币种
       currency: "",
+      currencyId:'',
       currencyValue: '',
       //产地
       originPlace: "",
+      originPlaceId:"",
       originPlaceValue: '',
       // 商品保质期限
       goodsShelfLife: '365',
@@ -515,18 +533,19 @@ export default {
       // 搜索option列表
       optionInfoItem: "",
       //sku属性选择
-      addSkuOptionLine: [{
-        KoreanOptionName: '1',
-        ChineseOptionName: '2',
-        EnglishOptionName: '3',
-        JapaneseOptionName: '4',
-        KoreanOptionValue: '5',
-        ChineseOptionValue: '6',
-        EnglishOptionValue: '7',
-        JapaneseOptionValue: '8',
-        nameCode:'8001',
-        valueCode:"800126,800127,800130",
-      }],
+      addSkuOptionLine:[],
+      // [{
+      //   KoreanOptionName: '1',
+      //   ChineseOptionName: '2',
+      //   EnglishOptionName: '3',
+      //   JapaneseOptionName: '4',
+      //   KoreanOptionValue: '5',
+      //   ChineseOptionValue: '6',
+      //   EnglishOptionValue: '7',
+      //   JapaneseOptionValue: '8',
+      //   nameCode:'8001',
+      //   valueCode:"800126,800127,800130",
+      // }],
       // 存储optionName ID
       // 存储optionValue ID
       nameCode:'',
@@ -559,70 +578,68 @@ export default {
     },
     // 获取品牌名
     getBrand() {
-      const that = this;
+      const vm = this;
       $.ajax({
           url: api.getBrand(),
           type: 'GET',
           dataType: 'json',
         })
         .success(function(data) {
-          that.brandName = data.data.brandList;
-          that.goodsUnit = data.data.unit;
+          vm.brandName = data.data.brandList;
+          vm.goodsUnit = data.data.unit;
           console.log(data);
         })
         .error(function() {
-          that.$message({ showClose: true, message: "error", type: 'error' })
+          vm.$message({ showClose: true, message: "error", type: 'error' })
         })
         .complete(function() {
-          console.log("complete");
+          // console.log("complete");
         });
     },
     // 根据品牌名获取信息
     getBrandInfo() {
-      const that = this;
+      const vm = this;
+      vm.brandId = event.currentTarget.getAttribute("data-id")
       $.ajax({
-          url: api.getBrandInfo(that.brandNameValue),
+          url: api.getBrandInfo(vm.brandId),
           type: 'GET',
           dataType: 'json',
         })
         .success(function(data) {
-          if (data.data.list) {
-            that.brandCategory = data.data.list;
-            that.categoryLevel = data.data.cateStru;
-            that.brandCategoryValue = that.brandCategory[Object.keys(that.brandCategory)[0]].allVal;
-            that.brandCat = that.brandCategoryValue;
+          if (data.code==2000) {
+            vm.brandCategory = data.data.list;
+            vm.categoryLevel = data.data.cateStru;
+            vm.brandCategoryValue = vm.brandCategory[Object.keys(vm.brandCategory)[0]].allVal;
+            vm.brandCat = vm.brandCategoryValue;
             console.log(data)
-            let brandid = ($('.brandlist.selected').data('id')) ? $('.brandlist.selected').data('id') : "";
-            console.log(brandid)
-            that.brandId = brandid
           }
         })
         .error(function() {
-          that.$message({ showClose: true, message: "error", type: 'error' })
+          vm.$message({ showClose: true, message: "error", type: 'error' })
         })
         .complete(function() {
-          console.log("complete");
+          // console.log("complete");
         });
     },
     // 选择品牌类目
     chooseBrandCat() {
-      const that = this;
+      const vm = this;
       setTimeout(function() {
-        that.categoryCode = $(".el-select-dropdown__item.brandCats.selected").data('id')
-        that.brandCat = that.brandCategoryValue;
-        let arr = that.getCatCode(that.categoryCode);
-        that.catLv1 = '';
-        that.catLv2 = '';
-        that.catLv3 = '';
+        vm.categoryCode = $(".el-select-dropdown__item.brandCats.selected").data('id')
+        vm.brandCat = vm.brandCategoryValue;
+        let arr = vm.getCatCode(vm.categoryCode);
+        vm.catLv1 = '';
+        vm.catLv2 = '';
+        vm.catLv3 = '';
         // 判断有几级，分别渲染
         if (arr[0]) {
-          that.catLv1 = that.categoryLevel;
+          vm.catLv1 = vm.categoryLevel;
           setTimeout(function() { $('#select_category_lv1').val(arr[0]) }, 50)
           if (arr[1]) {
-            that.catLv2 = that.catLv1[arr[0]].sec;
+            vm.catLv2 = vm.catLv1[arr[0]].sec;
             setTimeout(function() { $('#select_category_lv2').val(arr[1]) }, 50)
             if (arr[2]) {
-              that.catLv3 = that.catLv2[arr[1]].thr;
+              vm.catLv3 = vm.catLv2[arr[1]].thr;
               setTimeout(function() { $('#select_category_lv3').val(arr[2]) }, 50)
             }
           }
@@ -684,9 +701,10 @@ export default {
 
     // 上传图片
     updatePic() {
-      let that = this;
-      let lang = event.currentTarget.className
-      console.log(that[lang])
+      let vm = this;
+      let lang = event.currentTarget.className;
+      let langContent= event.currentTarget.getAttribute("id");
+      console.log(vm[lang])
       //创建FormData对象
       let data = new FormData();
       //为FormData对象添加数据
@@ -705,15 +723,74 @@ export default {
           cache: false,
         })
         .success(function(data) {
-          console.log(data)
-          that[lang] = data.data.cdnAddr;
+          
+          if(data.code==2000){
+            console.log(data)
+          vm[langContent] = data.data;
+          vm[lang] = data.data.cdnAddr;
+          vm.loading = false;
+          }    
         })
         .error(function() {
           console.log("error");
         })
         .complete(function() {
-          console.log("complete");
+          // console.log("complete");
         });
+
+    },
+    createGoodBasic(){
+      let vm = this;
+      let postData={
+        'cateId': vm.categoryCode,
+        'brandId': vm.brandId,
+        'brandName': vm.brandNameValue,
+        'unit' : vm.goodsUnitValue,
+        'lifeTime': vm.goodsShelfLife,
+        'langData':{
+          'N000920100':{
+            "gudsName" : vm.chineseTitle,
+            "gudsSubName": vm.chineseSubtitle,
+            "imgData":vm.cnContent
+          },
+          'N000920400':{
+            "gudsName" : vm.koreaTitle,
+            "gudsSubName": vm.koreaSubtitle,
+            "imgData": vm.krContent
+          },
+          'N000920200':{
+            "gudsName" : vm.englishTitle,
+            "gudsSubName": vm.englishSubtitle,
+            "imgData":vm.enContent
+          },
+          'N000920300':{
+            "gudsName" : vm.japanTitle,
+            "gudsSubName": vm.japanSubtitle,
+            "imgData":vm.jaContent
+          }
+        }      
+      };
+      $.ajax({
+        url: api.createGoodsBasic(),
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify(postData),
+      })
+      .done(function(data) {
+        if(data.code==2000){
+          vm.mainGudsId = data.data.mainId;
+          vm.gudsId = data.data.langData[Object.keys(data.data.langData)[0]].gudsId;
+          $('.erp-addbasic-btns').hide();
+          vm.activeName="second"
+        }       
+      })
+      .fail(function() {
+        console.log("error");
+      })
+      .always(function() {
+        // console.log("complete");
+      });
+      
 
     },
 
@@ -726,34 +803,47 @@ export default {
 
     // 获取币种、产地
     getBasicOptions() {
-      const that = this;
+      const vm = this;
       $.ajax({
           url: api.getBasicOptions(),
           type: 'GET',
           dataType: 'json',
         })
         .success(function(data) {
-          that.currency = data.data.currency;
-          that.originPlace = data.data.origin;
-          that.optionName = data.data.options;
-          console.log(data);
+          if(data.code==200){
+            vm.currency = data.data.currency;
+            vm.originPlace = data.data.origin;
+            vm.optionName = data.data.options;
+            console.log(data);
+          }
+          
         })
         .error(function() {
-          that.$message({ showClose: true, message: "error", type: 'error' })
+          vm.$message({ showClose: true, message: "error", type: 'error' })
         })
         .complete(function() {
-          console.log("complete");
+          // console.log("complete");
         });
     },
+
+    selectCurrency(){
+      this.currencyId =event.currentTarget.getAttribute("data-id")
+      console.log(this.currencyId)
+    },
+    selectOriginPlace(){
+      this.originPlaceId =event.currentTarget.getAttribute("data-id")
+      console.log(this.originPlaceId)
+    },
+
     //选择option名字，渲染option信息
     selectOptionName() {
-      const that = this;
-      that.optionNameId = event.currentTarget.getAttribute("data-id");
-      $.getJSON(api.getOptionValues(that.optionNameId), function(data, textStatus) {
+      const vm = this;
+      vm.optionNameId = event.currentTarget.getAttribute("data-id");
+      $.getJSON(api.getOptionValues(vm.optionNameId), function(data, textStatus) {
         console.log(data);
-        that.optionInfoItem = data.data;
+        vm.optionInfoItem = data.data;
         //初始化 要添加的信息
-        that.AddOptionPostData={
+        vm.AddOptionPostData={
           "optNameCode":"", 
           "optValues": []
         }
@@ -774,11 +864,11 @@ export default {
     },
     // 搜索option info
     searchOptionName() {
-      const that = this;
+      const vm = this;
       let searchKey = $('.search-optioninfo').find('input').val()
       if (searchKey != "") {
-        $.getJSON(api.searchOptionValue(that.optionNameId, searchKey), function(data, textStatus) {
-          that.optionInfoItem = data.data;
+        $.getJSON(api.searchOptionValue(vm.optionNameId, searchKey), function(data, textStatus) {
+          vm.optionInfoItem = data.data;
         });
       }
     },
@@ -819,7 +909,7 @@ export default {
         });
       })
       
-      // console.log(this.AddOptionPostData)
+      console.log(this.AddOptionPostData)
 
     },
     // 选择option信息
@@ -835,6 +925,7 @@ export default {
       });
       let index = document.querySelector(".option-search-box").getAttribute("data-index");
         console.log(index)
+        // 已经添加的
         if (index != null) {
           if (this.optionNameValue && $('.option-info').find('.active-option.option-info-item')) {
             let [krVal,cnVal,enVal,jaVal]=["","","",""];
@@ -851,24 +942,40 @@ export default {
             cnVal=cnVal.substring(0,cnVal.length-2);
             enVal=enVal.substring(0,enVal.length-2);
             jaVal=jaVal.substring(0,jaVal.length-2);
-            this.addSkuOptionLine[index] = {
-              KoreanOptionName: optionArr[0],
-              ChineseOptionName: optionArr[1],
-              EnglishOptionName: optionArr[2],
-              JapaneseOptionName: optionArr[3],
-              KoreanOptionValue: krVal,
-              ChineseOptionValue: cnVal,
-              EnglishOptionValue: enVal,
-              JapaneseOptionValue: jaVal,
-              nameCode: this.optionNameId,
-              valueCode: valueCode.substring(0,valueCode.length-1)
-            }
-            this.showSearchBox = false;
+
+            // 判断是否有相同的属性
+            const vm = this;
+            let flag = true;
+            vm.addSkuOptionLine.forEach( function(element, index) {
+              if(element["nameCode"]==vm.optionNameId){
+                flag = false;
+                vm.$alert("已经存在相同的optionName",{
+                   confirmButtonText: '确定',
+                })       
+              }
+            });
+            if(flag==true){
+              vm.addSkuOptionLine[index] = {
+                KoreanOptionName: optionArr[0],
+                ChineseOptionName: optionArr[1],
+                EnglishOptionName: optionArr[2],
+                JapaneseOptionName: optionArr[3],
+                KoreanOptionValue: krVal,
+                ChineseOptionValue: cnVal,
+                EnglishOptionValue: enVal,
+                JapaneseOptionValue: jaVal,
+                nameCode: vm.optionNameId,
+                valueCode: valueCode.substring(0,valueCode.length-1)
+              }
+              vm.showSearchBox = false;
+            }        
           }
-  
-        } else {
+        } 
+        // 还未添加的
+        else {
           if (this.optionNameValue && $('.option-info').find('.active-option.option-info-item')) {
             let [krVal,cnVal,enVal,jaVal]=["","","",""];
+            let optionArr = this.optionNameValue.split('/');
             let valueCode="";
             $('.active-option.option-info-item').each(function(index, el) {
                 krVal+=el.innerText.split("/")[0]+' ; '
@@ -880,27 +987,33 @@ export default {
             krVal=krVal.substring(0,krVal.length-2);
             cnVal=cnVal.substring(0,cnVal.length-2);
             enVal=enVal.substring(0,enVal.length-2);
-            jaVal=jaVal.substring(0,jaVal.length-2);
-  
-            let optionArr = this.optionNameValue.split('/');
-            this.KoreanOptionName = optionArr[0];
-            this.ChineseOptionName = optionArr[1];
-            this.EnglishOptionName = optionArr[2];
-            this.JapaneseOptionName = optionArr[3];
-            this.KoreanOptionValue = krVal;
-            this.ChineseOptionValue = cnVal;
-            this.EnglishOptionValue = enVal;
-            this.JapaneseOptionValue = jaVal;
-            this.valueCode = valueCode.substring(0,valueCode.length-1)
-            this.showSearchBox = false;
+            jaVal=jaVal.substring(0,jaVal.length-2);       
+            
+            // 判断是否有相同的属性
+            const vm =this;
+            vm.addSkuOptionLine.forEach( function(element, index) {
+              if(element["nameCode"]==vm.optionNameId){
+                
+              }
+            });
+            vm.KoreanOptionName = optionArr[0];
+            vm.ChineseOptionName = optionArr[1];
+            vm.EnglishOptionName = optionArr[2];
+            vm.JapaneseOptionName = optionArr[3];
+            vm.KoreanOptionValue = krVal;
+            vm.ChineseOptionValue = cnVal;
+            vm.EnglishOptionValue = enVal;
+            vm.JapaneseOptionValue = jaVal;
+            vm.valueCode = valueCode.substring(0,valueCode.length-1)
+            vm.showSearchBox = false;
           }
         }
-        // console.log(this.addSkuOptionLine)
+        console.log(this.addSkuOptionLine)
       
     },
     //添加到新增行
     addOptions() {
-      // console.log(this.addSkuOptionLine)
+      console.log(this.addSkuOptionLine)
       this.addSkuOptionLine.push({
         KoreanOptionName: this.KoreanOptionName,
         ChineseOptionName: this.ChineseOptionName,
@@ -918,11 +1031,12 @@ export default {
     // 应用sku，生成sku信息
     applyToBuild() {
       console.log(this.addSkuOptionLine)
-      const that =this;
+      const vm =this;
       let postData={};
-      this.addSkuOptionLine.forEach( function(element, index) {
+      vm.addSkuOptionLine.forEach( function(element, index) {
         postData[element.nameCode]=element.valueCode
       });
+      console.log(JSON.stringify(postData))
       $.ajax({
           url: api.getOptionGroup(),
           type: 'POST',
@@ -932,47 +1046,90 @@ export default {
         })
         .success(function(data) {
           console.log(data)
-          that.optionNameObj=data.data.optionNames;
-          that.optionValueObj=data.data.optionGroup;
+          vm.optionNameObj=data.data.optionNames;
+          vm.optionValueObj=data.data.optionGroup;
         })
         .error(function() {
           console.log("error");
         })
         .complete(function() {
-          console.log("complete");
+          // console.log("complete");
         });
+    },
+    createGood(){
+      const vm =this;
+      let optionGroup=[];
+      vm.optionValueObj.forEach( function(element, index) {
+        let $tr=$('.erp-sku-info>tbody>tr:eq('+index+')')
+        element["attributes"]={
+            "PRICE" : $tr.find('.price-value').find('input').val(),
+            "UPC": $tr.find('.upc-value').find('input').val(),
+            "CR": $tr.find('.cr-code-value').find('input').val(),
+            "HS": $tr.find('.hs-code-value').find('input').val(),
+            "LENGTH": $tr.find('.length-value').find('input').val(),
+            "WIDTH": $tr.find('.width-value').find('input').val(),
+            "HEIGHT": $tr.find('.height-value').find('input').val(),
+            "WEIGHT": $tr.find('.weight-value').find('input').val()
+        };
+        optionGroup.push(element)
+      });
+      let postData={
+        "sellerId": vm.brandNameValue,     //SPU 页面上选择的品牌ID
+        "gudsId":vm.gudsId ,  //SPU 商品保存后的SPU ID
+        "mainGudsId": vm.mainGudsId,// 这里是坑
+        "origin": vm.originPlaceId,//产地代码，CODE值
+        "currency": vm.currencyId ,//币种代码：CODE值
+        "optionGroup": optionGroup
+      };
+      console.log(postData)
+      $.ajax({
+        url: api.createGoods(),
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify(postData),
+      })
+      .done(function(data) {
+        console.log(data);
+      })
+      .fail(function() {
+        console.log("error");
+      })
+      .always(function() {
+        console.log("complete");
+      });
+      
     }
   },
   watch: {
     // 批量输入
     skuPrice: function() {
-      let that = this;
+      let vm = this;
       $('.price-value').each(function() {
-        $(this).find('input').val(that.skuPrice)
+        $(this).find('input').val(vm.skuPrice)
       })
     },
     skuLength: function() {
-      let that = this;
+      let vm = this;
       $('.length-value').each(function() {
-        $(this).find('input').val(that.skuLength)
+        $(this).find('input').val(vm.skuLength)
       })
     },
     skuHeight: function() {
-      let that = this;
+      let vm = this;
       $('.height-value').each(function() {
-        $(this).find('input').val(that.skuHeight)
+        $(this).find('input').val(vm.skuHeight)
       })
     },
     skuWeight: function() {
-      let that = this;
+      let vm = this;
       $('.weight-value').each(function() {
-        $(this).find('input').val(that.skuWeight)
+        $(this).find('input').val(vm.skuWeight)
       })
     },
     skuWidth: function() {
-      let that = this;
+      let vm = this;
       $('.width-value').each(function() {
-        $(this).find('input').val(that.skuWidth)
+        $(this).find('input').val(vm.skuWidth)
       })
     },
   },

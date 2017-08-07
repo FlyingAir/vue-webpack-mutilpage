@@ -30,5 +30,11 @@ export default {
   },
   addNewOptionValue(){
     return _baseUrl + '?g=guds&m=gudsOptions&a=addNewOptionValue'
-  }
+  },
+  createGoodsBasic(){
+    return _baseUrl + '?g=guds&m=guds&a=doAdd'
+  },
+  createGoods(){
+    return _baseUrl + '?g=guds&m=gudsOptions&a=create'
+  } 
 }
