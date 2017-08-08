@@ -43,5 +43,12 @@ export default {
   },
   createGoods(){
     return _baseUrl + '?g=guds&m=gudsOptions&a=create'
-  } 
+  },
+
+  /**
+   * ListMain
+   */
+  showBrandList(){
+    return _baseUrl + '?g=guds&m=brand&a=showBrandList'
+  }
 }

@@ -88,8 +88,8 @@
                 </td>
                 <td class="info-title">商品单位</td>
                 <td>
-                  <el-select v-model="goodsUnitValue" placeholder="请选择">
-                    <el-option v-for="item in goodsUnit" :key="item" :label="item" :value="item">
+                  <el-select v-model="goodsUnitValue" placeholder="请选择" @change="selcetGoodsUnit">
+                    <el-option v-for="(value,key) in goodsUnit" :key="value" :label="value" :value="value" :data-id="key">
                     </el-option>
                   </el-select>
                 </td>
@@ -463,6 +463,7 @@ export default {
       // 商品单位
       goodsUnit: "",
       goodsUnitValue: '',
+      goodsUnitID:'',
       // 多国主图
       cnPic: '',
       cnContent: "",
@@ -616,6 +617,11 @@ export default {
           // console.log("complete");
         });
     },
+    //单位选择
+    selcetGoodsUnit(){
+      this.goodsUnitID=event.currentTarget.getAttribute("data-id")
+    },
+
     // 选择品牌类目
     chooseBrandCat() {
       const vm = this;
@@ -741,7 +747,7 @@ export default {
         'cateId': vm.categoryCode,
         'brandId': vm.brandId,
         'brandName': vm.brandNameValue,
-        'unit': vm.goodsUnitValue,
+        'unit': vm.goodsUnitID,
         'lifeTime': vm.goodsShelfLife,
         'langData': {
           'N000920100': {
