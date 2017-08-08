@@ -1,4 +1,11 @@
-const _baseUrl = 'http://erp.stage.com/index.php'
+var  _baseUrl = "";
+if(window.location.host == "localhost:8801"){
+   _baseUrl = "http://erp.stage.com/index.php"
+}else {
+  _baseUrl = "//"+window.location.host+'/index.php'
+}
+
+console.log(_baseUrl)
 // const _baseUrl2 = ''
 export default {
   getBrand () {

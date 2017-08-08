@@ -9,6 +9,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 0px 30px;
+  z-index:1000;
   .option-info {
     height: 206px;
     overflow: auto;
@@ -104,7 +105,7 @@
 
   color: #2c3e50;
   text-align: center;
-  padding: 10px 20px;
+  padding: 10px 20px 10px 40px;
   header {
     font-family: "Arial", "Microsoft YaHei", "黑体", "宋体", sans-serif;
     font-size: 16px;
@@ -337,12 +338,14 @@
         cursor: pointer;
         color: #90a4ae;
         font-size: 18px;
+        line-height:36px;
       }
 
       .el-icon-delete2 {
         cursor: pointer;
         color: #90a4ae;
         font-size: 16px;
+        line-height:36px;
       }
       .el-icon-search:hover,
       .el-icon-delete2:hover {
@@ -365,6 +368,7 @@
   .add-sku-option,
   .added-sku-option {
     height: 52px;
+    // text-align:center;
     ul {
       li {
         float: left;
@@ -373,6 +377,17 @@
           height: 32px;
         }
       }
+    }
+  }
+  .add-sku-option{
+    height:40px;
+    line-height:30px;
+    border-bottom:1px solid #CADEE7;
+    div{
+      padding-left: 7px;
+      color : #546E7A;
+      font-size:14px;
+      font-weight:600;
     }
   }
 }
@@ -387,6 +402,7 @@
   height: 26px;
   width: 66px;
   padding: 0px;
+  margin-left: 10px;
   i {
     color: #90A4AE;
     font-size: 14px;
@@ -443,12 +459,9 @@
 .erp-sku-info {
   width: 100%;
   border: 1px solid #CADEE7;
-  tbody{
-    width:100%;
-  }
   thead {
     background: #F7F9FB;
-    width:100%;
+
     th {
       border-right: 1px solid #CADEE7;
       border-bottom: 1px solid #CADEE7;
@@ -470,11 +483,13 @@
   td {
     border-right: 1px solid #CADEE7;
     height: 50px;
-    padding: 0px 10px;
+    padding: 0px 15px;
     font-size: 13px;
     color: #263238;
-    letter-spacing: 0;
     border-bottom: 1px solid #CADEE7;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
   .required_info{
     color:red;
@@ -509,4 +524,17 @@ select[name=select_category] {
 select:focus option:checked {
   color: white;
   background-image: linear-gradient(#20a0ff, #20a0ff);
+}
+#mask{
+  background: #000;
+    filter: alpha(opacity=50); /* IE的透明度 */
+    opacity: 0.5;  /* 透明度 */
+    display: none;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 999; /* 此处的图层要大于页面 */
+    display:none;
 }
