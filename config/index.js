@@ -5,8 +5,8 @@ module.exports = {
   build: {
     env: require('./prod.env'),
     index: path.resolve(__dirname, '../dist/index.html'),
-    assetsRoot: path.resolve(__dirname, '../Public'),
-    assetsSubDirectory: 'resource/home',
+    assetsRoot: path.resolve(__dirname, '../../NewProject/'),
+    assetsSubDirectory: 'b5c-sms2/Application/Tpl/Guds/Public',
     assetsPublicPath: '/Public',
     productionSourceMap: true,
     // Gzip off by default as many popular static hosts such as

@@ -49,6 +49,12 @@ export default {
    * ListMain
    */
   showBrandList(){
-    return _baseUrl + '?g=guds&m=brand&a=showBrandList'
+    return _baseUrl + '?g=guds&m=brand&a=showBrandList&isAjax=1&limit=30'
+  },
+  showGoodsList(){
+    return _baseUrl + '?g=guds&m=guds&a=showList'
+  },
+  getType(id,level){
+     return _baseUrl + '?g=guds&m=B5cai&a=getB5caiListByLevel&pId='+id+'&levId='+level 
   }
 }
